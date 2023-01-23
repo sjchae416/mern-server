@@ -1,19 +1,17 @@
 const express = require('express');
-
 // NOTE recordRoutes is an instance of the express router.
 // NOTE we use it to define our routes.
 // NOTE the router will be added as a middleware and will take control of requests starting with path /record.
 const recordRoutes = express.Router();
-
 // NOTE this will help us connect to the database
 const dbo = require('../db/conn');
-
 // NOTE this help convert the id from string to ObjectId for the _id.
 const ObjectId = require('mongodb').ObjectId;
 
 // ANCHOR this section will help you get a list of all the records.
 recordRoutes.route('/record').get(function (req, res) {
 	let db_connect = dbo.getDb('employees');
+
 	db_connect
 		.collection('records')
 		.find({})
@@ -27,6 +25,7 @@ recordRoutes.route('/record').get(function (req, res) {
 recordRoutes.route('/record/:id').get(function (req, res) {
 	let db_connect = dbo.getDb();
 	let myquery = { _id: ObjectId(req.params.id) };
+
 	db_connect.collection('records').findOne(myquery, function (err, result) {
 		if (err) throw err;
 		res.json(result);
@@ -41,6 +40,7 @@ recordRoutes.route('/record/add').post(function (req, res) {
 		position: req.body.position,
 		level: req.body.level,
 	};
+
 	db_connect.collection('records').insertOne(myobj, function (err, result) {
 		if (err) throw err;
 		res.json(result);
@@ -58,11 +58,14 @@ recordRoutes.route('/update/:id').post(function (req, res) {
 			level: req.body.level,
 		},
 	};
+
 	db_connect
 		.collection('records')
 		.updateOne(myquery, newvalues, function (err, result) {
 			if (err) throw err;
+
 			console.log('1 document updated');
+
 			res.json(result);
 		});
 });
@@ -71,9 +74,12 @@ recordRoutes.route('/update/:id').post(function (req, res) {
 recordRoutes.route('/:id').delete((req, res) => {
 	let db_connect = dbo.getDb();
 	let myquery = { _id: ObjectId(req.params.id) };
+
 	db_connect.collection('records').deleteOne(myquery, function (err, result) {
 		if (err) throw err;
+
 		console.log('1 document deleted');
+
 		res.json(result);
 	});
 });
