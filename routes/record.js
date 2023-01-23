@@ -10,9 +10,9 @@ const ObjectId = require('mongodb').ObjectId;
 
 // ANCHOR this section will help you get a list of all the records.
 recordRoutes.route('/record').get(function (req, res) {
-	let db_connect = dbo.getDb('employees');
+	let dbConnect = dbo.getDb('employees');
 
-	db_connect
+	dbConnect
 		.collection('records')
 		.find({})
 		.toArray(function (err, result) {
@@ -23,10 +23,10 @@ recordRoutes.route('/record').get(function (req, res) {
 
 // ANCHOR this section will help you get a single record by id
 recordRoutes.route('/record/:id').get(function (req, res) {
-	let db_connect = dbo.getDb();
-	let myquery = { _id: ObjectId(req.params.id) };
+	let dbConnect = dbo.getDb();
+	let myQuery = { _id: ObjectId(req.params.id) };
 
-	db_connect.collection('records').findOne(myquery, function (err, result) {
+	dbConnect.collection('records').findOne(myQuery, function (err, result) {
 		if (err) throw err;
 		res.json(result);
 	});
@@ -34,14 +34,14 @@ recordRoutes.route('/record/:id').get(function (req, res) {
 
 // ANCHOR this section will help you create a new record.
 recordRoutes.route('/record/add').post(function (req, res) {
-	let db_connect = dbo.getDb();
+	let dbConnect = dbo.getDb();
 	let myobj = {
 		name: req.body.name,
 		position: req.body.position,
 		level: req.body.level,
 	};
 
-	db_connect.collection('records').insertOne(myobj, function (err, result) {
+	dbConnect.collection('records').insertOne(myobj, function (err, result) {
 		if (err) throw err;
 		res.json(result);
 	});
@@ -49,8 +49,8 @@ recordRoutes.route('/record/add').post(function (req, res) {
 
 // ANCHOR this section will help you update a record by id.
 recordRoutes.route('/update/:id').post(function (req, res) {
-	let db_connect = dbo.getDb();
-	let myquery = { _id: ObjectId(req.params.id) };
+	let dbConnect = dbo.getDb();
+	let myQuery = { _id: ObjectId(req.params.id) };
 	let newvalues = {
 		$set: {
 			name: req.body.name,
@@ -59,9 +59,9 @@ recordRoutes.route('/update/:id').post(function (req, res) {
 		},
 	};
 
-	db_connect
+	dbConnect
 		.collection('records')
-		.updateOne(myquery, newvalues, function (err, result) {
+		.updateOne(myQuery, newvalues, function (err, result) {
 			if (err) throw err;
 
 			console.log('1 document updated');
@@ -72,10 +72,10 @@ recordRoutes.route('/update/:id').post(function (req, res) {
 
 // ANCHOR this section will help you delete a record
 recordRoutes.route('/:id').delete((req, res) => {
-	let db_connect = dbo.getDb();
-	let myquery = { _id: ObjectId(req.params.id) };
+	let dbConnect = dbo.getDb();
+	let myQuery = { _id: ObjectId(req.params.id) };
 
-	db_connect.collection('records').deleteOne(myquery, function (err, result) {
+	dbConnect.collection('records').deleteOne(myQuery, function (err, result) {
 		if (err) throw err;
 
 		console.log('1 document deleted');
